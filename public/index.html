@@ -1,0 +1,174 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+  <meta charset="utf-8"></meta>
+  <meta name="viewport" content="width=device-width"></meta>
+  <title>Human Random Sequence Experiment</title>
+  <link rel="stylesheet" href="/stylesheets/app.css"></link>
+  <script src="/js/foundation/js/vendor/modernizr.js"></script>
+</head>
+
+<body class="index" onkeypress="keystroke(event)">
+  <div class="row">
+        <div class="small-6 medium-6 large-6 columns" style="background-color:black; color:white; padding-right:1em; padding-top:1em; padding-bottom:1em; border-color:black; border-bottom-style:solid; border-top-style:solid; border-width:2">
+          <div class="t1" style="float:right">Human Random</div>
+        </div>
+
+        <div class="small-6 medium-6 large-6 columns" style="background-color:white; color:black; padding-left:1em; padding-top:1em; padding-bottom:1em; border-color:black; border-bottom-style:solid; border-top-style:solid; border-width:2">
+          <div class="t1" style="float:left">Sequence Experiment</div>
+        </div>
+
+      <hr />
+
+      <div style="padding-left: 5px; vertical-align: text-bottom">
+          <div class="small-6 medium-6 large-6 columns" style="padding-left: 0px; bottom:0px">
+              <div class="t2">Welcome, participant <span id='pid' style="color:#008cba"></span>, admitted on <span id='adate' style="color:#008cba"></span>  UTC.</div>
+          </div>
+          <div class="small-6 medium-6 large-6 columns">
+              <div class="t2">Sequences entered: <span id='seqcount' style="color:orange; font-size:1em; font-weight:bold"></span></div>
+              <div class="t2" id="surveycode"></div>
+          </div>
+        <hr />
+
+          <div class="t2"><span id='clicktap'></span>&nbsp;as many times as you please.</div>
+          <div class="t2">Please attempt to be as <b>random</b> as possible.  The <b>longer</b> your sequence, the more <b>helpful</b> your sequence will be.</div>
+      </div>
+  </div>
+
+  <div class="row" id="pagecenter">
+    <center>
+        <noscript><h1>This site requires Javascript to be enabled in order to function.</h1></noscript>
+    </center>
+
+    <div class="t4" id="sequence1"></div>
+    <div class="t4" id="sequence2"></div>
+    <div class="t4" id="sequence3"></div>
+    <div class="t4" id="sequence4"></div>
+
+    <div class="small-6 medium-6 large-6 columns"
+         style="background-color:black; color:white; padding-right:2em; padding-top:1em;
+         padding-bottom:1em; border-color:black; border-bottom-style:solid;
+         border-top-style:solid; border-width:2">
+      <img alt="" id="updatezero" onmouseover="clickzero()" onmouseout="clickzero()" onclick="addzero()"
+           style="float:right" data-interchange="[/img/0-white-small.png, (default)],
+                             [/img/0-white-small.png, (small)],
+                             [/img/0-white-med.png, (medium)],
+                             [/img/0-white-huge.png, (large)]"></img>
+    </div>
+    <div class="small-6 medium-6 large-6 columns"
+         style="background-color:white; color:black; padding-left:2em; padding-top:1em;
+         padding-bottom:1em; border-color:black; border-bottom-style:solid;
+         border-top-style:solid; border-width:2">
+      <img alt="" id="updateone" onmouseover="clickone()" onmouseout="clickone()" onclick="addone()"
+           data-interchange="[/img/1-black-small.png, (default)],
+                             [/img/1-black-small.png, (small)], 
+                             [/img/1-black-med.png, (medium)], 
+                             [/img/1-black-huge.png, (large)]"></img>
+    </div>
+  </div>
+
+  <div class="row" style="padding-top:10px; padding-bottom:10px" id="donerow">
+    <div class="twelve columns">
+      <center><img alt="" id="doneimg" onmouseover="clickdone()" onmouseout="clickdone()" onclick="done()"
+           data-interchange="[/img/done-blue-167x70.png, (default)],
+                             [/img/done-blue-100x42.png, (small)], 
+                             [/img/done-blue-140x58.png, (medium)], 
+                             [/img/done-blue-167x70.png, (large)]"></img>
+      </center>
+    </div>
+  </div>
+
+  <div class="row" id='lowernavbar'>
+    <div class="twelve columns" style="background-color:black; color:white; padding-top:15px; padding-bottom:15px"></div>
+  </div>
+
+  <script src="/js/foundation/js/vendor/jquery.js"></script>
+  <script src="/js/foundation/js/vendor/fastclick.js"></script>
+  <script src="/js/foundation/js/foundation.min.js"></script>
+  <script src="//cdn.jsdelivr.net/jstat/1.0.6/jstat.min.js"></script>
+  <script src="/js/fingerprint/fingerprint.js"></script>
+  <script src="/js/spinjs/spin.js"></script>
+  <script src="/jc/hrse.js"></script>
+  <script>
+    $(document).foundation();
+  </script>
+
+  <script type="text/javascript">
+    seqstring = "";
+    keyuser = false;
+    sequenceid = "";
+    docdate = new Date();
+    touchy = false;
+    mousey = false;
+    keyey = false;
+
+    spinopts = {
+        lines: 9, // The number of lines to draw
+        length: 20, // The length of each line
+        width: 8, // The line thickness
+        radius: 0, // The radius of the inner circle
+        corners: 1, // Corner roundness (0..1)
+        rotate: 0, // The rotation offset
+        direction: 1, // 1: clockwise, -1: counterclockwise
+        color: '#000', // #rgb or #rrggbb or array of colors
+        speed: 1, // Rounds per second
+        trail: 60, // Afterglow percentage
+        shadow: false, // Whether to render a shadow
+        hwaccel: false, // Whether to use hardware acceleration
+        className: 'spinner', // The CSS class to assign to the spinner
+        zIndex: 2e9, // The z-index (defaults to 2000000000)
+        top: 'auto', // Top position relative to parent in px
+        left: 'auto' // Left position relative to parent in px
+    };
+
+    fingerprint = new Fingerprint({canvas: true}).get();
+
+    stepone();
+    starttime = docdate.getTime();  // The time the document was loaded
+    endtime = 0; // The time the done button was clicked
+    firstchartime = 0;  // The time the first character was entered
+    lastchartime = 0;  // The time the last character was entered
+    prevchartime = 0;  // The time when the previous character was entered
+    tbcmax = 0;  // Max time between chars
+    tbcmin = 0;  // Min time between chars
+    tbcmean = 0;  // Mean time between chars
+    tbcmedian = 0; // ...
+    tbcrange = 0;
+    tbcstdev = 0;
+    tbcsumsqrd = 0;
+    tbcsumsqerr = 0;
+    tbcmeansqerr = 0;
+    tbcgeomean = 0;
+    tbcvariance = 0;
+    tbccoeffvar = 0;
+    tbcarr = [];  // Array containing all times between chars
+    getpid();
+
+    document.body.addEventListener('touchstart',
+        function(e) {
+            touchy = true;
+        }
+    )
+    document.body.addEventListener('mousemove',
+        function(e) {
+            mousey = true;
+        }
+    )
+    document.body.addEventListener('keydown',
+        function(e) {
+            keyey = true;
+        }
+    )
+
+  </script>
+  <script type="text/javascript" src="//use.typekit.net/bwq7vum.js"></script>
+  <script type="text/javascript">try{Typekit.load();}catch(e){}</script>
+
+</body>
+</html>
+
+
+
+

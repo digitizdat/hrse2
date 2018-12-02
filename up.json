@@ -1,7 +1,11 @@
 {
-  "name": "hrse2",
+  "name": "hrse2-api",
   "profile": "digitizdat-development",
   "regions": [
     "us-east-2"
-  ]
+  ],
+  "static": {
+    "dir": "public",
+    "prefix": "/static/"
+  }
 }
